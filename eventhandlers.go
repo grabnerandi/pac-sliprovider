@@ -21,13 +21,13 @@ import (
 	-> "sh.keptn.event.action.triggered"
 */
 
-
 // Handles ConfigureMonitoringEventType = "sh.keptn.event.monitoring.configure"
 func HandleConfigureMonitoringEvent(myKeptn *keptn.Keptn, incomingEvent cloudevents.Event, data *keptn.ConfigureMonitoringEventData) error {
 	log.Printf("Handling Configure Monitoring Event: %s", incomingEvent.Context.GetID())
 
-	return nil	
+	return nil
 }
+
 //
 // Handles ConfigurationChangeEventType = "sh.keptn.event.configuration.change"
 // TODO: add in your handler code
@@ -52,7 +52,7 @@ func HandleDeploymentFinishedEvent(myKeptn *keptn.Keptn, incomingEvent cloudeven
 	// ToDo: Implement your tests here
 
 	// Send Test Finished Event
-	// return myKeptn.SendTestsFinishedEvent(&incomingEvent, "", "", startTime, "pass", nil, "keptn-service-template-go")
+	// return myKeptn.SendTestsFinishedEvent(&incomingEvent, "", "", startTime, "pass", nil, "pac-sliprovider")
 	return nil
 }
 

@@ -1,4 +1,4 @@
-module example.com/keptn-service-template-go
+module github.com/grabnerandi/pac-sliprovider
 
 go 1.13
 

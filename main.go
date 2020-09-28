@@ -185,7 +185,7 @@ func _main(args []string, env envConfig) int {
 		cloudeventshttp.WithPath(env.Path),
 	)
 
-	log.Println("Starting keptn-service-template-go...")
+	log.Println("Starting pac-sliprovider...")
 	log.Printf("    on Port = %d; Path=%s", env.Port, env.Path)
 
 	if err != nil {
