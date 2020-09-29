@@ -114,13 +114,12 @@ func HandleEvaluationDoneEvent(myKeptn *keptn.Keptn, incomingEvent cloudevents.E
 func HandleInternalGetSLIEvent(myKeptn *keptn.Keptn, incomingEvent cloudevents.Event, data *keptn.InternalGetSLIEventData) error {
 	log.Printf("Handling Internal Get SLI Event: %s", incomingEvent.Context.GetID())
 
-	incomingGetSLIEventData := &keptn.InternalGetSLIEventData{}
-	incomingEvent.DataAs(incomingGetSLIEventData)
+	incomingGetSLIEventData := data
 
 	// Step 1 - Do we need to do something?
 	// Lets make sure we are only processing an event that really belongs to our SLI Provider
 	if incomingGetSLIEventData.SLIProvider != "pac-sliprovider" {
-		return nil
+		return fmt.Errorf("Not handling event because its not for pac-sliprovider. Its for: " + incomingGetSLIEventData.SLIProvider)
 	}
 
 	// Step 2 - prep-work
@@ -141,6 +140,7 @@ func HandleInternalGetSLIEvent(myKeptn *keptn.Keptn, incomingEvent cloudevents.E
 	// if we dont have any data return the error
 	if err != nil || pacResult == nil {
 		SendInternalGetSLIDoneEvent(myKeptn, incomingGetSLIEventData, indicators, sliResults, labels, err, "pac-sliprovider")
+		return err
 	}
 
 	// Step 4 - now lets return those result properties
@@ -164,6 +164,9 @@ func HandleInternalGetSLIEvent(myKeptn *keptn.Keptn, incomingEvent cloudevents.E
 
 	// Step 5 - add the result file link to the labels so it shows up in the bridage
 	labels[pacResult.ID] = resultFile
+
+	sliResultAsText, err := json.Marshal(sliResults)
+	log.Printf(string(sliResultAsText))
 
 	return SendInternalGetSLIDoneEvent(myKeptn, incomingGetSLIEventData, indicators, sliResults, labels, nil, "pac-sliprovider")
 }
@@ -224,9 +227,10 @@ func loadPACData(myKeptn *keptn.Keptn, incomingGetSLIEventData *keptn.InternalGe
 	// Step 1c - another option is loading it from a sli-provider specific configuration file stored in the Keptn Repo
 	// This could be a sli.yaml, myconfig.conf, ... - whatever makes sense for your SLI provider
 	// In this case we load it from a file in a sli-provider specific subfolder that is stored for this keptn project, stage & service
-	keptnResourceContent, err := myKeptn.GetKeptnResource("pac-sliprovider/pacconfig.conf")
+	sliConfigFile, err := myKeptn.GetKeptnResource("pac-sliprovider/sli.yaml")
 	if err != nil {
-		resultFile = keptnResourceContent
+		log.Printf("TODO: Downloaded SLI.yaml but not doing anything with it yet in this sample SLI Provider: " + sliConfigFile)
+		// resultFile = keptnResourceContent
 	}
 
 	// Step 1d - if no configuration was set through customFilters, Envs or Config File lets go with a default!

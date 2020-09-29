@@ -1,0 +1,30 @@
+{
+    "type": "sh.keptn.internal.event.get-sli",
+    "contenttype": "application/json",
+    "specversion": "0.2",
+    "source": "test-event",
+    "data": {
+      "customFilters": [
+      ],
+      "deploymentstrategy": "direct",
+      "end": "2019-11-19T09:26:53Z",
+      "indicators": [
+        "nospeakers",
+        "avgrating"
+      ],
+      "project": "pacproject",
+      "service": "pacservice",
+      "sliProvider": "pac-sliprovider",
+      "stage": "pacstage",
+      "start": "2019-11-19T09:18:14Z",
+      "teststrategy": "performance",
+      "labels": {
+        "testid": "12345",
+        "buildnr": "build17",
+        "runby": "JohnDoe"
+      }
+    },
+    "id": "432b41e2-e50e-4d55-a4ca-0076df5b0b29",
+    "time": "2019-11-19T09:26:54.282Z",
+    "shkeptncontext": "cc42042e-9d25-48cb-a0df-ad8c2e30b6d7"
+  }

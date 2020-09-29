@@ -1,0 +1,23 @@
+spec_version: '0.1.0'
+filter:
+  resultfile: "results.json"
+comparison:
+  compare_with: single_result
+  include_result_with_score: pass
+  number_of_comparison_results: 1
+  aggregate_function: avg
+objectives:
+  - sli: nospeakers
+    pass:
+    - criteria:
+      - ">10"
+  - sli: avgrating
+    pass:
+    - criteria:
+      - ">4.0"
+      - ">=+0%"
+    key_sli: true
+    weight: 5
+total_score:
+  pass: "90%"
+  warning: "75%"
