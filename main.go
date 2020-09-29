@@ -103,6 +103,17 @@ func processKeptnCloudEvent(ctx context.Context, event cloudevents.Event) error 
 		}
 
 		return HandleEvaluationDoneEvent(myKeptn, event, evaluationDoneEventData)
+	} else if event.Type() == keptn.InternalGetSLIEventType {
+		log.Printf("Processing Internal Get SLI Event")
+
+		internalGetSLIEventData := &keptn.InternalGetSLIEventData{}
+		err := event.DataAs(internalGetSLIEventData)
+		if err != nil {
+			log.Printf("Got Data Error: %s", err.Error())
+			return err
+		}
+
+		return HandleInternalGetSLIEvent(myKeptn, event, internalGetSLIEventData)
 	} else if event.Type() == keptn.ProblemOpenEventType || event.Type() == keptn.ProblemEventType {
 		// Subscribing to a problem.open or problem event is deprecated since Keptn 0.7 - subscribe to sh.keptn.event.action.triggered
 		log.Printf("Subscribing to a problem.open or problem event is not recommended since Keptn 0.7. Please subscribe to event of type: sh.keptn.event.action.triggered")

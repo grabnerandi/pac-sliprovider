@@ -34,6 +34,7 @@ github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDk
 github.com/cloudevents/sdk-go v0.10.0/go.mod h1:PW8UwWI6tD2Ry5kFpZfV1qlrADFkfaDCZXLiJ1dC1Ks=
 github.com/cloudevents/sdk-go v1.1.2 h1:mg/7d+BzubBPrPpH1bdeF85BQZYV85j7Ljqat3+m+qE=
 github.com/cloudevents/sdk-go v1.1.2/go.mod h1:ss+jWJ88wypiewnPEzChSBzTYXGpdcILoN9YHk8uhTQ=
+github.com/cloudevents/sdk-go v2.3.0+incompatible h1:zffbZsGyJEVTJneiktx94c8+LG46TR77hsTyG2KoG4I=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

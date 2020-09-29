@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/cloudevents/sdk-go v1.1.2
+	github.com/google/uuid v1.1.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/keptn/go-utils v0.6.3-0.20200828090559-595b01d0f2a6
 	github.com/onsi/ginkgo v1.12.0 // indirect
