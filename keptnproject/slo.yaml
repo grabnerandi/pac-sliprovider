@@ -10,12 +10,16 @@ objectives:
   - sli: nospeakers
     pass:
     - criteria:
-      - ">10"
+      - ">10"     # For a great PAC we want at least 10 speakers
+      - ">10"     # For a great PAC we want at least 10 speakers
   - sli: avgrating
     pass:
     - criteria:
-      - ">4.0"
-      - ">=+0%"
+      - ">4.0"    # For a great PAC we want at least a 4-star rating
+      - ">=+0%"   # For a great PAC we expect ratings to climb
+    warning:
+    - criteria:
+      - ">3.0"    # For an OK PAC we at least expect a 3-start rating
     key_sli: true
     weight: 5
 total_score:

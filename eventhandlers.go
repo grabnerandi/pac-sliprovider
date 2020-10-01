@@ -163,7 +163,8 @@ func HandleInternalGetSLIEvent(myKeptn *keptn.Keptn, incomingEvent cloudevents.E
 	}
 
 	// Step 5 - add the result file link to the labels so it shows up in the bridage
-	labels[pacResult.ID] = resultFile
+	labels["PAC Data Source"] = resultFile
+	labels["Link to "+pacResult.ID] = pacResult.URL
 
 	sliResultAsText, err := json.Marshal(sliResults)
 	log.Printf(string(sliResultAsText))

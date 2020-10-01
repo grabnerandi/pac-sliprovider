@@ -5,6 +5,10 @@
     "source": "test-event",
     "data": {
       "customFilters": [
+        {
+          "key":"resultfile",
+          "value":"https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/resultfiles/alternativeresults.json"
+        }
       ],
       "deploymentstrategy": "direct",
       "end": "2019-11-19T09:26:53Z",
@@ -19,6 +23,7 @@
       "start": "2019-11-19T09:18:14Z",
       "teststrategy": "performance",
       "labels": {
+        "pacId": "JurassicPAC",
         "testid": "12345",
         "buildnr": "build17",
         "runby": "JohnDoe"
