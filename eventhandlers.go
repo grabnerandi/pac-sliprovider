@@ -237,11 +237,13 @@ func loadPACData(myKeptn *keptn.Keptn, incomingGetSLIEventData *keptn.InternalGe
 
 	// Step 1d - if no configuration was set through customFilters, Envs or Config File lets go with a default!
 	if resultFile == "" {
+		log.Printf("No result file passed on slo.yaml so we default to our results.json")
 		resultFile = "https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/resultfiles/results.json"
 	}
 
 	// Validateion - if a resultfile was specified but it doesnt start with https we assume we just got passed the filename itself - so - we prepend our sample repo URL
 	if strings.Index(resultFile, "http") != 0 {
+		log.Printf(resultFile + " not a full qualified URL. So we prepend our sample URL")
 		resultFile = "https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/resultfiles/" + resultFile
 	}
 
@@ -277,7 +279,7 @@ func loadPACData(myKeptn *keptn.Keptn, incomingGetSLIEventData *keptn.InternalGe
 	}
 
 	if matchingPacResult == nil {
-		return nil, resultFile, fmt.Errorf("Couldn't find matching results")
+		return nil, resultFile, fmt.Errorf("Couldn't find matching results for " + pacID)
 	}
 
 	return matchingPacResult, resultFile, nil

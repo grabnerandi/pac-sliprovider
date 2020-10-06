@@ -1,35 +1,33 @@
 {
-    "type": "sh.keptn.internal.event.get-sli",
-    "contenttype": "application/json",
-    "specversion": "0.2",
-    "source": "test-event",
-    "data": {
-      "customFilters": [
-        {
-          "key":"resultfile",
-          "value":"https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/resultfiles/alternativeresults.json"
-        }
-      ],
-      "deploymentstrategy": "direct",
-      "end": "2019-11-19T09:26:53Z",
-      "indicators": [
-        "nospeakers",
-        "avgrating"
-      ],
-      "project": "pacproject",
-      "service": "pacservice",
-      "sliProvider": "pac-sliprovider",
-      "stage": "pacstage",
-      "start": "2019-11-19T09:18:14Z",
-      "teststrategy": "performance",
-      "labels": {
-        "pacId": "JurassicPAC",
-        "testid": "12345",
-        "buildnr": "build17",
-        "runby": "JohnDoe"
+  "contenttype": "application/json",
+  "data": {
+    "customFilters": [
+      {
+        "key": "resultfile",
+        "value": "alternativeresults.json"
       }
+    ],
+    "deployment": "",
+    "deploymentstrategy": "",
+    "end": "2020-10-06T12:32:11.393Z",
+    "indicators": [
+      "nospeakers",
+      "avgrating"
+    ],
+    "labels": {
+      "pacId": "FirstPAC"
     },
-    "id": "432b41e2-e50e-4d55-a4ca-0076df5b0b29",
-    "time": "2019-11-19T09:26:54.282Z",
-    "shkeptncontext": "cc42042e-9d25-48cb-a0df-ad8c2e30b6d7"
-  }
+    "project": "pacproject",
+    "service": "pacservice",
+    "sliProvider": "pac-sliprovider",
+    "stage": "qualitygate",
+    "start": "2020-10-06T12:27:11.393Z",
+    "teststrategy": "manual"
+  },
+  "id": "cfd7c821-dd77-413b-ae04-fc45af05dbab",
+  "source": "lighthouse-service",
+  "specversion": "0.2",
+  "time": "2020-10-06T12:32:11.422Z",
+  "type": "sh.keptn.internal.event.get-sli",
+  "shkeptncontext": "40c5c5fc-bf7f-47b6-8d31-cbf2f3d9394e"
+}

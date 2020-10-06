@@ -18,6 +18,7 @@ spec:
       containers:
         - name: pac-sli-provider
           image: grabnerandi/pac-sliprovider:0.1.0 # Todo: Replace this with your image name
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
