@@ -204,7 +204,7 @@ Resource has been uploaded.
 Now we are all set and can send Keptn some quality gate evaluation requests. The easiest is to do this via the Keptn CLI:
 
 ```console
-$ keptn send event start-evaluation --project=pacproject --service=pacservice --stage=qualitygate labels=pacId=FirstPAC 
+$ keptn send event start-evaluation --project=pacproject --service=pacservice --stage=qualitygate --labels=pacId=FirstPAC 
 Starting to send a start-evaluation event to evaluate the service pacservice in project pacproject
 ID of Keptn context: f80a65a3-f3c7-4b28-ac84-1da0dfd915a9
 ```

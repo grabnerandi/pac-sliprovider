@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/cloudevents/sdk-go/pkg/cloudevents"
@@ -237,6 +238,11 @@ func loadPACData(myKeptn *keptn.Keptn, incomingGetSLIEventData *keptn.InternalGe
 	// Step 1d - if no configuration was set through customFilters, Envs or Config File lets go with a default!
 	if resultFile == "" {
 		resultFile = "https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/resultfiles/results.json"
+	}
+
+	// Validateion - if a resultfile was specified but it doesnt start with https we assume we just got passed the filename itself - so - we prepend our sample repo URL
+	if strings.Index(resultFile, "http") != 0 {
+		resultFile = "https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/resultfiles/" + resultFile
 	}
 
 	// Step 2 - Lets actually download the result file from the URL we have:-)
