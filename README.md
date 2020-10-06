@@ -39,7 +39,7 @@ In my case I launched an Amazon Linux 2 EC2 size t2.medium. Keptn on k3s only ne
 
 To install keptn on k3s on an AWS EC2 I just executed the following command:
 ```console
-sudo curl -Lsf https://raw.githubusercontent.com/keptn-sandbox/keptn-on-k3s/0.7.1/install-keptn-on-k3s.sh | bash -s - --provider=aws
+$ sudo curl -Lsf https://raw.githubusercontent.com/keptn-sandbox/keptn-on-k3s/0.7.1/install-keptn-on-k3s.sh | bash -s - --provider=aws
 ```
 The output of that command after its finished looks something like this
 ```console
@@ -74,10 +74,71 @@ Keptn is an event-driven control plane which means it issues events to trigger d
 A Keptn Service - such as my PAC SLI Provider - needs to be installed on the Keptn k8s cluster and needs to subscribe to the events that the servie wants to handle.
 As of Keptn 0.7.x we do this by simply applying the deployment yaml which will deploy my pac-sliprovider as a pod.
 
-The easiest way to get the deployment yaml - and some other files we will need later - on your machine is a simple git pull:
-```console
+As we are running k3s we can simply use *k3s kubectl* to execute an apply command and take the deployment file from this git repo:
 
+```console
+$ k3s kubectl -n keptn apply -f https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/deploy/service.yaml
 ```
+
+To validate the installation we can get the list of running pods in the keptn namespace. You should see the default keptn services including our pac-sliprovider
+```console
+$ k3s kubectl -n keptn get pods
+NAME                                     READY   STATUS    RESTARTS   AGE
+api-gateway-nginx-784dd975b9-4jdkd       1/1     Running   0          19m
+eventbroker-go-65547c496f-t8ndg          1/1     Running   0          19m
+api-service-6886df69dc-vbh9m             1/1     Running   0          19m
+bridge-84754954bd-8xd6g                  1/1     Running   0          19m
+mongodb-5cd5ff8454-tdrbf                 1/1     Running   0          19m
+keptn-nats-cluster-0                     3/3     Running   0          19m
+remediation-service-58b6b4f9d5-txp4n     2/2     Running   2          19m
+shipyard-service-84764d9c5d-q499l        2/2     Running   2          19m
+mongodb-datastore-78f5ff6b8f-wptlj       2/2     Running   2          19m
+lighthouse-service-5d84df8db-4wnnb       2/2     Running   2          19m
+configuration-service-769bc757df-zqt9b   2/2     Running   2          19m
+pac-sliprovider-7656d4647b-gg76t         2/2     Running   0          13s
+```
+
+### Step 3 - Create a Keptn Project for PAC
+
+Keptn is organized in projects where a project has one or many stages. To create a new project we need a so called *shipyard.yaml* that describes the stages and what should happen in these stages. In our case we use Keptn only for Quality Gates and we only want to do this for a single stage. So - our *shipyard.yaml* is very simple:
+
+```yaml
+stages:
+- name: "qualitygate"
+```
+
+If you want to learn more about Shipyard and the other Keptn use cases such as Performance as a Self-Service, Progressive Delivery or Auto-Remediation check out the various tutorials on https://tutorials.keptn.sh 
+
+I've uploaded the shipyard file to this GitHub repo. In order to use it we simply download it by e.g: using wget or curl and then use it with the *keptn create project* command:
+
+```console
+$ wget https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/keptnproject/shipyard.yaml
+$ keptn create project pac-project -s=shipyard.yaml
+WARNING: Creating a project without Git upstream repository is not recommended.
+You can configure a Git upstream repository using:
+
+keptn update project PROJECTNAME --git-user=GIT_USER --git-token=GIT_TOKEN --git-remote-url=GIT_REMOTE_URL
+
+Starting to create project
+ID of Keptn context: 681eb93a-c6ec-48b8-8761-792a3ddce477
+Project pac-project created
+Stage qualitygate created
+Project successfully created
+```
+
+As you can see from the output. It is recommend to also set an upstream git as Keptn internally keeps all files in a git repository managed by Keptn's configuration service. In our example I skip this step as its not necessary. If you still want to set an upstream git to e.g: point to a GitHub repo you can do this via the *keptn update project* command shown in the console output.
+
+### Step 4 - Configure PAC Provider for our Project
+
+As of Keptn 0.7.x each Keptn project can have one SLI Provider that should be used when pulling in SLI data for quality gate evaluation. This will change in the future though to support multiple SLI providers.
+In order to tell Keptn which SLI provider we have to create a ConfigMap that links our pac-sliprovider to the pac-project. In the future this should be covered through a Keptn CLI command as explained in [Issue 2483](https://github.com/keptn/keptn/issues/2483)
+
+I've prepared a configMap for our pac-project which we can apply using kubectl
+
+```console
+$ k3s kubectl -n keptn apply -f 
+```
+
 
 
 The *pac-sliprovider* can be installed as a part of [Keptn's uniform](https://keptn.sh).
