@@ -24,3 +24,4 @@ main
 .idea/*
 # but allow .idea shared run configurations
 !.idea/runConfigurations/
+pac-sliprovider
