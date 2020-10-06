@@ -16,7 +16,6 @@ vendor/*
 
 # binaries (created by go build on Linux/OSX)
 main
-pac-sliprovider
 
 # IDE specific folders
 .vscode

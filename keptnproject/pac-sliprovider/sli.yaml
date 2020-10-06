@@ -1,0 +1,5 @@
+---
+spec_version: '1.0'
+indicators:
+  nospeakers: "data/nospeakers"
+  avgrating: "dataavgrating"
