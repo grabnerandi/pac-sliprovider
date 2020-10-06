@@ -25,8 +25,8 @@ In my talk I took a t2.medium Amazon Linux 2 EC2 machine where I
 * Installed my *pac-sliprovider*
 * Created a Keptn *pac-project* 
 * Configured the *pac-sliprovider* as SLI provider for that project
-* Created a Keptn Service *pacservice*
-* Uploaded an SLI.yaml and SLO.yaml
+* Created a Service *pacservice* for our project *pac-project*
+* Uploading SLO.yaml
 * Executed a couple of Keptn Quality Gates
 
 Now - lets go into the details of each step so you can replicate this!
@@ -136,9 +136,30 @@ In order to tell Keptn which SLI provider we have to create a ConfigMap that lin
 I've prepared a configMap for our pac-project which we can apply using kubectl
 
 ```console
-$ k3s kubectl -n keptn apply -f 
+$ k3s kubectl -n keptn apply -f https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/keptnproject/lighthouse-configmap.yaml
+configmap/lighthouse-config-pac-project created
 ```
 
+### Step 5 - Create a service
+
+A Keptn project not only has a defined set of stages. A Keptn project also has services which typically refer to your micro-services or applications you want keptn to provide testing, quality gate, delivery or remediation services for. In our case we simply create a service called *pacservice* that we will use to trigger our quality gates
+
+```console
+$ keptn create service pacservice -p=pac-project
+Starting to create service
+ID of Keptn context: 3ef375d5-2c48-4514-ada8-0ef58f9673f4
+Creating new Keptn service pacservice in stage qualitygate
+```
+
+### Step 6 - Uploading SLO.yaml
+
+I suggest you read up on SLIs and SLOs and how they are used by Keptn Quality Gates. In our example we also have to upload an SLO.yaml and an SLI.yaml so that when we ask Keptn to query the SLI Provider for metrics the SLI provider knows which metrics to query and Keptn's Lighthouse service knows how to analyze them.
+For this we first download two files from this repo to your local machine and then upload them to keptn using *keptn add-resource*
+
+```console
+$ wget https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/keptnproject/slo.yaml
+$ wget 
+```
 
 
 The *pac-sliprovider* can be installed as a part of [Keptn's uniform](https://keptn.sh).
