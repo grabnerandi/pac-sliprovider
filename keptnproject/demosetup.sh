@@ -66,8 +66,11 @@ keptn add-resource --project="${KEPTNPROJECT}" --service="${KEPTNSERVICE}" --sta
 echo "-----------------------------------------------"
 echo "Step 7 - Executing Quality Gates"
 keptn send event start-evaluation --project="${KEPTNPROJECT}" --service="${KEPTNSERVICE}" --stage="${KEPTNSTAGE}" --labels=pacId=FirstPAC,buildId=1
+sleep 2
 keptn send event start-evaluation --project="${KEPTNPROJECT}" --service="${KEPTNSERVICE}" --stage="${KEPTNSTAGE}" --labels=pacId=MountainPAC,buildId=2
+sleep 2
 keptn send event start-evaluation --project="${KEPTNPROJECT}" --service="${KEPTNSERVICE}" --stage="${KEPTNSTAGE}" --labels=pacId=FuturePAC,buildId=3
+sleep 2
 keptn send event start-evaluation --project="${KEPTNPROJECT}" --service="${KEPTNSERVICE}" --stage="${KEPTNSTAGE}" --labels=pacId=JurassicPAC,buildId=4
 
 

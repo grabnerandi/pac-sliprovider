@@ -237,6 +237,14 @@ $ keptn send event start-evaluation --project=pacproject --service=pacservice --
 $ keptn send event start-evaluation --project=pacproject --service=pacservice --stage=qualitygate --labels=pacId=JurassicPAC,buildId=4
 ```
 
+**Analyze results in the Bridge**
+And here we go - all results in the bridge
+![](./images/keptnbridgeafterqualitygateruns.png)
+
+And we can also switch to chart view to see historical trends -> now we see why one of the PACs was violating our SLOs :-)
+![](./images/keptnbridgeheatmapchart.png)
+
+
 ## Last Step - Uninstall
 
 If you don't want to keep your Keptn on k3s installation around you can easily delete it. Simply run:
