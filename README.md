@@ -109,6 +109,10 @@ configuration-service-769bc757df-zqt9b   2/2     Running   2          19m
 pac-sliprovider-7656d4647b-gg76t         2/2     Running   0          13s
 ```
 
+## Step 3 until 7
+
+If you dont want to run the following steps manually you can also execute the script demosetup.sh which you find in this repo.
+
 ## Step 3 - Create a Keptn Project for PAC
 
 Keptn is organized in projects where a project has one or many stages. To create a new project we need a so called *shipyard.yaml* that describes the stages and what should happen in these stages. In our case we use Keptn only for Quality Gates and we only want to do this for a single stage. So - our *shipyard.yaml* is very simple:
@@ -229,139 +233,21 @@ $ keptn send event start-evaluation --project=pacproject --service=pacservice --
 ```
 
 ```console
-$ keptn send event start-evaluation --project=pacproject --service=pacservice --stage=qualitygate --labels=pacId=JurrasicPAC,buildId=4
+$ keptn send event start-evaluation --project=pacproject --service=pacservice --stage=qualitygate --labels=pacId=JurassicPAC,buildId=4
 ```
 
+## Last Step - Uninstall
 
-
-The *pac-sliprovider* can be installed as a part of [Keptn's uniform](https://keptn.sh).
-
-### Deploy in your Kubernetes cluster
-
-To deploy the current version of the *pac-sliprovider* in your Keptn Kubernetes cluster, apply the [`deploy/service.yaml`](deploy/service.yaml) file:
-
+If you don't want to keep your Keptn on k3s installation around you can easily delete it. Simply run:
 ```console
-kubectl apply -f deploy/service.yaml
+$ k3s-uninstall.sh
 ```
 
-This should install the `pac-sliprovider` together with a Keptn `distributor` into the `keptn` namespace, which you can verify using
+# Stay in touch!
 
-```console
-kubectl -n keptn get deployment pac-sliprovider -o wide
-kubectl -n keptn get pods -l run=pac-sliprovider
-```
-
-### Up- or Downgrading
-
-Adapt and use the following command in case you want to up- or downgrade your installed version (specified by the `$VERSION` placeholder):
-
-```console
-kubectl -n keptn set image deployment/pac-sliprovider pac-sliprovider=grabnerandi/pac-sliprovider:$VERSION --record
-```
-
-### Uninstall
-
-To delete a deployed *pac-sliprovider*, use the file `deploy/*.yaml` files from this repository and delete the Kubernetes resources:
-
-```console
-kubectl delete -f deploy/service.yaml
-```
-
-## Development
-
-Development can be conducted using any GoLang compatible IDE/editor (e.g., Jetbrains GoLand, VSCode with Go plugins).
-
-It is recommended to make use of branches as follows:
-
-* `master` contains the latest potentially unstable version
-* `release-*` contains a stable version of the service (e.g., `release-0.1.0` contains version 0.1.0)
-* create a new branch for any changes that you are working on, e.g., `feature/my-cool-stuff` or `bug/overflow`
-* once ready, create a pull request from that branch back to the `master` branch
-
-When writing code, it is recommended to follow the coding style suggested by the [Golang community](https://github.com/golang/go/wiki/CodeReviewComments).
-
-### Where to start
-
-If you don't care about the details, your first entrypoint is [eventhandlers.go](eventhandlers.go). Within this file 
- you can add implementation for pre-defined Keptn Cloud events.
- 
-To better understand Keptn CloudEvents, please look at the [Keptn Spec](https://github.com/keptn/spec).
- 
-If you want to get more insights, please look into [main.go](main.go), [deploy/service.yaml](deploy/service.yaml),
- consult the [Keptn docs](https://keptn.sh/docs/) as well as existing [Keptn Core](https://github.com/keptn/keptn) and
- [Keptn Contrib](https://github.com/keptn-contrib/) services.
-
-### Common tasks
-
-* Build the binary: `go build -ldflags '-linkmode=external' -v -o pac-sliprovider`
-* Run tests: `go test -race -v ./...`
-* Build the docker image: `docker build . -t grabnerandi/pac-sliprovider:dev` (Note: Ensure that you use the correct DockerHub account/organization)
-* Run the docker image locally: `docker run --rm -it -p 8080:8080 grabnerandi/pac-sliprovider:dev`
-* Push the docker image to DockerHub: `docker push grabnerandi/pac-sliprovider:dev` (Note: Ensure that you use the correct DockerHub account/organization)
-* Deploy the service using `kubectl`: `kubectl apply -f deploy/`
-* Delete/undeploy the service using `kubectl`: `kubectl delete -f deploy/`
-* Watch the deployment using `kubectl`: `kubectl -n keptn get deployment pac-sliprovider -o wide`
-* Get logs using `kubectl`: `kubectl -n keptn logs deployment/pac-sliprovider -f`
-* Watch the deployed pods using `kubectl`: `kubectl -n keptn get pods -l run=pac-sliprovider`
-* Deploy the service using [Skaffold](https://skaffold.dev/): `skaffold run --default-repo=your-docker-registry --tail` (Note: Replace `your-docker-registry` with your DockerHub username; also make sure to adapt the image name in [skaffold.yaml](skaffold.yaml))
+There is a lot to learn from this example which I cover in the Neotys PAC talk. I hope you find time to watch it. Or - feel free to reach out at any time by signing up for our [Keptn Slack](https://slack.keptn.sh) where you can find me.
 
 
-### Testing Cloud Events
-
-We have dummy cloud-events in the form of [RFC 2616](https://ietf.org/rfc/rfc2616.txt) requests in the [test-events/](test-events/) directory. These can be easily executed using third party plugins such as the [Huachao Mao REST Client in VS Code](https://marketplace.visualstudio.com/items?itemName=humao.rest-client).
-
-## Automation
-
-### GitHub Actions: Automated Pull Request Review
-
-This repo uses [reviewdog](https://github.com/reviewdog/reviewdog) for automated reviews of Pull Requests. 
-
-You can find the details in [.github/workflows/reviewdog.yml](.github/workflows/reviewdog.yml).
-
-### GitHub Actions: Unit Tests
-
-This repo has automated unit tests for pull requests. 
-
-You can find the details in [.github/workflows/tests.yml](.github/workflows/tests.yml).
-
-### Travis-CI: Build Docker Images
-
-This repo uses [Travis-CI](https://travis-ci.org) to automatically build docker images. This process is optional and needs to be manually 
-enabled by signing in into [travis-ci.org](https://travis-ci.org) using GitHub and enabling Travis for your repository.
-
-After enabling Travis-CI, the following settings need to be added as secrets to your repository on the Travis-CI Repository Settings page:
-
-* `REGISTRY_USER` - your DockerHub username
-* `REGISTRY_PASSWORD` - a DockerHub [access token](https://hub.docker.com/settings/security) (alternatively, your DockerHub password)
-
-Furthermore, the variable `IMAGE` needs to be configured properly in the respective section:
-```yaml
-env:
-  global:
-    - IMAGE=grabnerandi/pac-sliprovider # PLEASE CHANGE THE IMAGE NAME!!!
-```
-You can find the implementation of the build-job in [.travis.yml](.travis.yml).
-
-## How to release a new version of this service
-
-It is assumed that the current development takes place in the master branch (either via Pull Requests or directly).
-
-To make use of the built-in automation using Travis CI for releasing a new version of this service, you should
-
-* branch away from master to a branch called `release-x.y.z` (where `x.y.z` is your version),
-* write release notes in the [releasenotes/](releasenotes/) folder,
-* check the output of Travis CI builds for the release branch, 
-* verify that your image was built and pushed to DockerHub with the right tags,
-* update the image tags in [deploy/service.yaml], and
-* test your service against a working Keptn installation.
-
-If any problems occur, fix them in the release branch and test them again.
-
-Once you have confirmed that everything works and your version is ready to go, you should
-
-* create a new release on the release branch using the [GitHub releases page](https://github.com/keptn-sandbox/pac-sliprovider/releases), and
-* merge any changes from the release branch back to the master branch.
-
-## License
+# License
 
 Please find more information in the [LICENSE](LICENSE) file.

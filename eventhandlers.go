@@ -269,17 +269,24 @@ func loadPACData(myKeptn *keptn.Keptn, incomingGetSLIEventData *keptn.InternalGe
 	pacID := labels["pacId"]
 	var matchingPacResult *PACResult
 	if pacID == "" {
-		matchingPacResult = &resultJSON.Results[0]
+		log.Printf("No pacId passed via labels - so - just picking first result in " + resultFile)
+		if len(resultJSON.Results) > 0 {
+			matchingPacResult = &resultJSON.Results[0]
+		}
 	} else {
-		for _, pacResult := range resultJSON.Results {
-			if pacResult.ID == pacID {
-				matchingPacResult = &pacResult
+		log.Printf("Searching for entry pacId=" + pacID)
+		for ix, pacResult := range resultJSON.Results {
+			if strings.Compare(pacResult.ID, pacID) == 0 {
+				matchingPacResult = &resultJSON.Results[ix]
+				break
 			}
 		}
 	}
 
 	if matchingPacResult == nil {
 		return nil, resultFile, fmt.Errorf("Couldn't find matching results for " + pacID)
+	} else {
+		log.Printf("Found match: " + matchingPacResult.ID + ": " + matchingPacResult.URL)
 	}
 
 	return matchingPacResult, resultFile, nil
