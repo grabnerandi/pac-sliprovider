@@ -2,22 +2,8 @@
 
 This is a Keptn SLI Provider built for my talk at Neotys (Jurassic) PAC 2020: https://www.neotys.com/performance-advisory-council/andreas-grabner
 
-It was built using the keptn-service-template-go repository instructions which I kept here for reference!
+It was built using the [keptn-service-template-go](https://github.com/keptn-sandbox/keptn-service-template-go/generate) repository instructions which I kept here for reference!
 
-Quick start:
-
-1. Click [Use this template](https://github.com/keptn-sandbox/keptn-service-template-go/generate) on top of the repository, or download the repo as a zip-file, extract it into a new folder named after the service you want to create (e.g., simple-service) 
-1. Replace every occurrence of (docker) image names and tags from `grabnerandi/pac-sliprovider` to your docker organization and image name (e.g., `yourorganization/simple-service`)
-1. Replace every occurrence of `pac-sliprovider` with the name of your service (e.g., `simple-service`)
-1. Optional (but recommended): Create a git repo (e.g., on `github.com/your-username/simple-service`)
-1. Àdapt the [go.mod](go.mod) file and change `example.com/` to the actual package name (e.g., `github.com/your-username/simple-service`)
-1. Add yourself to the [CODEOWNERS](CODEOWNERS) file
-1. Initialize a git repository: 
-  * `git init .`
-  * `git add .`
-  * `git commit -m "Initial Commit"`
-1. Optional: Push your code an upstream git repo (e.g., GitHub) and adapt all links that contain `github.com` (e.g., to `github.com/your-username/simple-service`)
-1. Last but not least: Remove this intro within the README file and make sure the README file properly states what this repository is about
 
 # pac-sliprovider
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/keptn-sandbox/pac-sliprovider)
@@ -29,9 +15,70 @@ This implements a pac-sliprovider for Keptn. If you want to learn more about Kep
 
 | Keptn Version    | [pac-sliprovider Docker Image](https://hub.docker.com/r/grabnerandi/pac-sliprovider/tags) |
 |:----------------:|:----------------------------------------:|
-|       0.6.1      | grabnerandi/pac-sliprovider:0.1.0 |
+|       0.7.x      | grabnerandi/pac-sliprovider:0.1.0 |
 
-## Installation
+## Full Installation Instructions
+
+As I have presented this for Neotys PAC event I want to give you detailed instructions on how you can replicate what I have done in my talk.
+In my talk I took a t2.medium Amazon Linux 2 EC2 machine where I
+* Installed Keptn based on [Keptn 0.7.1 on K3s](https://github.com/keptn-sandbox/keptn-on-k3s/tree/release-0.7.1)
+* Installed my *pac-sliprovider*
+* Created a Keptn *pac-project* 
+* Configured the *pac-sliprovider* as SLI provider for that project
+* Created a Keptn Service *pacservice*
+* Uploaded an SLI.yaml and SLO.yaml
+* Executed a couple of Keptn Quality Gates
+
+Now - lets go into the details of each step so you can replicate this!
+
+### Step 1 - Install Keptn
+
+As I said - I just go with the simplest option which is Keptn on k3s. At the time of the conference Keptn 0.7.1 was the latest Keptn version so I decided to use that [0.7.1 release](https://github.com/keptn-sandbox/keptn-on-k3s/tree/release-0.7.1) on the [Keptn on K3s](https://github.com/keptn-sandbox/keptn-on-k3s) github repo. If there are newer versions available make sure to pick the latest!
+
+In my case I launched an Amazon Linux 2 EC2 size t2.medium. Keptn on k3s only needs 1vcpu and 4GB of RAM and has been tested on a variety of platforms. Check out the [prerequisits](https://github.com/keptn-sandbox/keptn-on-k3s#prerequisites) on the Keptn on k3s github repo!
+
+To install keptn on k3s on an AWS EC2 I just executed the following command:
+```console
+sudo curl -Lsf https://raw.githubusercontent.com/keptn-sandbox/keptn-on-k3s/0.7.1/install-keptn-on-k3s.sh | bash -s - --provider=aws
+```
+The output of that command after its finished looks something like this
+```console
+#######################################>
+# Deployment Summary
+#######################################>
+API URL   :      https://172.31.x.y/api
+Bridge URL:      https://172.31.x.y/bridge
+Bridge Username: keptn
+Bridge Password: PASSWORDFORBRIDGE
+API Token :      KEPTNAPITOKEN
+To use keptn:
+- Install the keptn CLI: curl -sL https://get.keptn.sh | sudo -E bash
+- Authenticate: keptn auth  --api-token "KEPTNAPITOKEN" --endpoint "https://172.31.x.y/api"
+```
+
+To finish the installation just follow the two additional instructions to install the Keptn CLI and then authenticate it!
+You should see an output similar to this:
+```console
+$ keptn auth  --api-token xxxxxxx
+keptn creates the folder /home/ec2-user/.keptn/ to store logs and possibly creds.
+Starting to authenticate
+Successfully authenticated
+Using a file-based storage for the key because the password-store seems to be not set up.
+```
+
+Now we are ready to use Keptn through the CLI.
+
+### Step 2 - Install my PAC SLI Provider
+
+Keptn is an event-driven control plane which means it issues events to trigger different activities, e.g: deploy, test, get sli data, validate, ...
+A Keptn Service - such as my PAC SLI Provider - needs to be installed on the Keptn k8s cluster and needs to subscribe to the events that the servie wants to handle.
+As of Keptn 0.7.x we do this by simply applying the deployment yaml which will deploy my pac-sliprovider as a pod.
+
+The easiest way to get the deployment yaml - and some other files we will need later - on your machine is a simple git pull:
+```console
+
+```
+
 
 The *pac-sliprovider* can be installed as a part of [Keptn's uniform](https://keptn.sh).
 
