@@ -1,41 +1,45 @@
 #!/bin/bash
 
-
-if [[ -z "$KEPTNPROJECT" ]]; then
+if [[ -z "${KEPTNPROJECT}" ]]; then
   KEPTNPROJECT=pacproject
 fi
-if [[ -z "$KEPTNSERVICE" ]]; then
+if [[ -z "${KEPTNSERVICE}" ]]; then
   KEPTNSERVICE=pacservice
 fi
-if [[ -z "$KEPTNSTAGE" ]]; then
+if [[ -z "${KEPTNSTAGE}" ]]; then
   KEPTNSTAGE=qualitygate
 fi
-if [[ -z "$K3SKUBECTL" ]]; then
-  K3SKUBECTL=k3s kubectl
+if [[ -z "${K3SKUBECTL}" ]]; then
+  K3SKUBECTL="k3s kubectl"
 fi
 
 echo "Assumes Keptn CLI is configured and points to a Keptn Installation"
+echo "Running with kubectl=${K3SKUBECTL}"
+echo "Project=${KEPTNPROJECT},Service=${KEPTNSERVICE},Stage=${KEPTNSTAGE}"
 read -rsp $'Press ctrl-c to abort. Press any key to continue...\n' -n1 key
 
 echo "-----------------------------------------------"
 echo "Step 2 - Install PAC SLI Provider"
-"${K3SKUBECTL[@]}" -n keptn apply -f https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/deploy/service.yaml
+"${K3SKUBECTL}" -n keptn apply -f https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/deploy/service.yaml
 
 echo "-----------------------------------------------"
 echo "Step 3 - Create a Keptn Project for PAC"
+rm shipyard.yaml
 wget https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/keptnproject/shipyard.yaml
 keptn create project "${KEPTNPROJECT}" -s=shipyard.yaml
 
 echo "-----------------------------------------------"
 echo "Step 4 - Configure PAC Provider for our Project"
-"${K3SKUBECTL[@]}" -n keptn apply -f https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/keptnproject/lighthouse-configmap.yaml
+"${K3SKUBECTL}" -n keptn apply -f https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/keptnproject/lighthouse-configmap.yaml
 
 echo "-----------------------------------------------"
 echo "Step 5 - Create a service"
 keptn create service "${KEPTNSERVICE}" -p="${KEPTNPROJECT}"
 
 echo "-----------------------------------------------"
-echo "Step 6 - Uploading SLO.yaml"
+echo "Step 6 - Uploading SLO and SLI"
+rm slo.yaml
+rm sli.yaml
 wget https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/keptnproject/slo.yaml
 wget https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/keptnproject/pac-sliprovider/sli.yaml
 keptn add-resource --project="${KEPTNPROJECT}" --service="${KEPTNSERVICE}" --stage="${KEPTNSTAGE}" --resource=slo.yaml
