@@ -79,6 +79,11 @@ Now we are ready to use Keptn through the CLI.
 And - you should also open a browser and access the Keptn's Bridge with the credentials in the output. Your browser will most likely tell you that its unsecure to access that site. Thats because by default Keptn on k3s installs a self-signed certificate. If you want to run keptn with a proper certificate check out the documentation. For our purpose its good and we can continue to the bridge. Should look similar to this:
 ![](./images/keptnbridgeafterinstall.png)
 
+## Step 2 until 7
+
+If you dont want to run the following steps yourself you can also execute the script demosetup.sh which you find in this repo.
+Simply download it on your machine and execute it. It defaults to k3s kubectl for executing kubectl commands, pacproject, pacservice and qualitygate. If you want to change those simply export the environment variables first and then run demosetup.sh
+
 ## Step 2 - Install my PAC SLI Provider
 
 Keptn is an event-driven control plane which means it issues events to trigger different activities, e.g: deploy, test, get sli data, validate, ...
@@ -108,10 +113,6 @@ lighthouse-service-5d84df8db-4wnnb       2/2     Running   2          19m
 configuration-service-769bc757df-zqt9b   2/2     Running   2          19m
 pac-sliprovider-7656d4647b-gg76t         2/2     Running   0          13s
 ```
-
-## Step 3 until 7
-
-If you dont want to run the following steps manually you can also execute the script demosetup.sh which you find in this repo.
 
 ## Step 3 - Create a Keptn Project for PAC
 

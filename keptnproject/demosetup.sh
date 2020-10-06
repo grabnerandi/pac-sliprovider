@@ -73,3 +73,4 @@ keptn send event start-evaluation --project="${KEPTNPROJECT}" --service="${KEPTN
 
 echo "-----------------------------------------------"
 echo "DONE!!"
+echo "Open your Keptns Bridge and check out the results!"
