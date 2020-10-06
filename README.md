@@ -1,8 +1,15 @@
-# README
+# PAC SLI Provider
 
 This is a Keptn SLI Provider built for my talk at Neotys (Jurassic) PAC 2020: https://www.neotys.com/performance-advisory-council/andreas-grabner
 
 It was built using the [keptn-service-template-go](https://github.com/keptn-sandbox/keptn-service-template-go/generate) repository instructions which I kept here for reference!
+
+Here is a high-level overview of what this Keptn SLI (Service Level Indicator) Provider does. It can read data from a results.json file and return data points that match the passed "pacId". This sample shows that Keptn SLI Providers can be used to query any type of data source. It also shows how contextual data can be passed to Keptn to query a specific set of data and how that data is then used by Keptn to be evaluated against your SLOs (Service Level Objectives).
+
+![](./images/pacprovideroverview.png)
+
+If you want to learn more I encourage you to register for PAC and either watch me live or watch the recording!
+If you want to replicate what I have done in the demo feel free to follow along with this readme where I walk you through the full installation instructions!
 
 
 # pac-sliprovider
@@ -17,7 +24,7 @@ This implements a pac-sliprovider for Keptn. If you want to learn more about Kep
 |:----------------:|:----------------------------------------:|
 |       0.7.x      | grabnerandi/pac-sliprovider:0.1.0 |
 
-## Full Installation Instructions
+# Full Installation Instructions
 
 As I have presented this for Neotys PAC event I want to give you detailed instructions on how you can replicate what I have done in my talk.
 In my talk I took a t2.medium Amazon Linux 2 EC2 machine where I
@@ -31,7 +38,7 @@ In my talk I took a t2.medium Amazon Linux 2 EC2 machine where I
 
 Now - lets go into the details of each step so you can replicate this!
 
-### Step 1 - Install Keptn
+## Step 1 - Install Keptn
 
 As I said - I just go with the simplest option which is Keptn on k3s. At the time of the conference Keptn 0.7.1 was the latest Keptn version so I decided to use that [0.7.1 release](https://github.com/keptn-sandbox/keptn-on-k3s/tree/release-0.7.1) on the [Keptn on K3s](https://github.com/keptn-sandbox/keptn-on-k3s) github repo. If there are newer versions available make sure to pick the latest!
 
@@ -72,7 +79,7 @@ Now we are ready to use Keptn through the CLI.
 And - you should also open a browser and access the Keptn's Bridge with the credentials in the output. Your browser will most likely tell you that its unsecure to access that site. Thats because by default Keptn on k3s installs a self-signed certificate. If you want to run keptn with a proper certificate check out the documentation. For our purpose its good and we can continue to the bridge. Should look similar to this:
 ![](./images/keptnbridgeafterinstall.png)
 
-### Step 2 - Install my PAC SLI Provider
+## Step 2 - Install my PAC SLI Provider
 
 Keptn is an event-driven control plane which means it issues events to trigger different activities, e.g: deploy, test, get sli data, validate, ...
 A Keptn Service - such as my PAC SLI Provider - needs to be installed on the Keptn k8s cluster and needs to subscribe to the events that the servie wants to handle.
@@ -102,7 +109,7 @@ configuration-service-769bc757df-zqt9b   2/2     Running   2          19m
 pac-sliprovider-7656d4647b-gg76t         2/2     Running   0          13s
 ```
 
-### Step 3 - Create a Keptn Project for PAC
+## Step 3 - Create a Keptn Project for PAC
 
 Keptn is organized in projects where a project has one or many stages. To create a new project we need a so called *shipyard.yaml* that describes the stages and what should happen in these stages. In our case we use Keptn only for Quality Gates and we only want to do this for a single stage. So - our *shipyard.yaml* is very simple:
 
@@ -136,7 +143,7 @@ As you can see from the output. It is recommend to also set an upstream git as K
 If you refresh your browser you will also see the new project being created!
 ![](./images/keptnbridgenewproject.png)
 
-### Step 4 - Configure PAC Provider for our Project
+## Step 4 - Configure PAC Provider for our Project
 
 As of Keptn 0.7.x each Keptn project can have one SLI Provider that should be used when pulling in SLI data for quality gate evaluation. This will change in the future though to support multiple SLI providers.
 In order to tell Keptn which SLI provider we have to create a ConfigMap that links our pac-sliprovider to the pacproject. In the future this should be covered through a Keptn CLI command as explained in [Issue 2483](https://github.com/keptn/keptn/issues/2483)
@@ -160,7 +167,7 @@ $ k3s kubectl -n keptn apply -f https://raw.githubusercontent.com/grabnerandi/pa
 configmap/lighthouse-config-pacproject created
 ```
 
-### Step 5 - Create a service
+## Step 5 - Create a service
 
 A Keptn project not only has a defined set of stages. A Keptn project also has services which typically refer to your micro-services or applications you want keptn to provide testing, quality gate, delivery or remediation services for. In our case we simply create a service called *pacservice* that we will use to trigger our quality gates
 
@@ -175,7 +182,7 @@ Creating new Keptn service pacservice in stage qualitygate
 In the bridge we can click on the project and validate that the pacservice was successfully created!
 ![](./images/keptnbridgenewservice.png)
 
-### Step 6 - Uploading SLO.yaml
+## Step 6 - Uploading SLO.yaml
 
 I suggest you read up on SLIs and SLOs and how they are used by Keptn Quality Gates. In our example we also have to upload an SLO.yaml and an SLI.yaml so that when we ask Keptn to query the SLI Provider for metrics the SLI provider knows which metrics to query and Keptn's Lighthouse service knows how to analyze them.
 For this we first download two files from this repo to your local machine and then upload them to keptn using *keptn add-resource*
@@ -199,7 +206,7 @@ Adding resource sli.yaml to service pacservice in stage qualitygate in project p
 Resource has been uploaded.
 ```
 
-### Step 7 - Executing Quality Gates
+## Step 7 - Executing Quality Gates
 
 Now we are all set and can send Keptn some quality gate evaluation requests. The easiest is to do this via the Keptn CLI:
 
