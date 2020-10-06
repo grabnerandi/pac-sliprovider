@@ -23,10 +23,10 @@ As I have presented this for Neotys PAC event I want to give you detailed instru
 In my talk I took a t2.medium Amazon Linux 2 EC2 machine where I
 * Installed Keptn based on [Keptn 0.7.1 on K3s](https://github.com/keptn-sandbox/keptn-on-k3s/tree/release-0.7.1)
 * Installed my *pac-sliprovider*
-* Created a Keptn *pac-project* 
+* Created a Keptn *pacproject* 
 * Configured the *pac-sliprovider* as SLI provider for that project
-* Created a Service *pacservice* for our project *pac-project*
-* Uploading SLO.yaml
+* Created a Service *pacservice* for our project *pacproject*
+* Uploading SLIs & SLOs
 * Executed a couple of Keptn Quality Gates
 
 Now - lets go into the details of each step so you can replicate this!
@@ -37,23 +37,23 @@ As I said - I just go with the simplest option which is Keptn on k3s. At the tim
 
 In my case I launched an Amazon Linux 2 EC2 size t2.medium. Keptn on k3s only needs 1vcpu and 4GB of RAM and has been tested on a variety of platforms. Check out the [prerequisits](https://github.com/keptn-sandbox/keptn-on-k3s#prerequisites) on the Keptn on k3s github repo!
 
-To install keptn on k3s on an AWS EC2 I just executed the following command:
+To install keptn on k3s on an AWS EC2 I just executed the following command. Please have a look at the other parameters of that installation script to best fit your setup!
 ```console
-$ sudo curl -Lsf https://raw.githubusercontent.com/keptn-sandbox/keptn-on-k3s/0.7.1/install-keptn-on-k3s.sh | bash -s - --provider=aws
+$ sudo curl -Lsf https://raw.githubusercontent.com/keptn-sandbox/keptn-on-k3s/0.7.1/install-keptn-on-k3s.sh | bash -s - --provider aws
 ```
 The output of that command after its finished looks something like this
 ```console
 #######################################>
 # Deployment Summary
 #######################################>
-API URL   :      https://172.31.x.y/api
-Bridge URL:      https://172.31.x.y/bridge
+API URL   :      https://18.123.x.y/api
+Bridge URL:      https://18.123.x.y/bridge
 Bridge Username: keptn
 Bridge Password: PASSWORDFORBRIDGE
 API Token :      KEPTNAPITOKEN
 To use keptn:
 - Install the keptn CLI: curl -sL https://get.keptn.sh | sudo -E bash
-- Authenticate: keptn auth  --api-token "KEPTNAPITOKEN" --endpoint "https://172.31.x.y/api"
+- Authenticate: keptn auth  --api-token "KEPTNAPITOKEN" --endpoint "https://18.123.x.y/api"
 ```
 
 To finish the installation just follow the two additional instructions to install the Keptn CLI and then authenticate it!
@@ -67,6 +67,10 @@ Using a file-based storage for the key because the password-store seems to be no
 ```
 
 Now we are ready to use Keptn through the CLI.
+
+**Accessing Keptn's Bridge**
+And - you should also open a browser and access the Keptn's Bridge with the credentials in the output. Your browser will most likely tell you that its unsecure to access that site. Thats because by default Keptn on k3s installs a self-signed certificate. If you want to run keptn with a proper certificate check out the documentation. For our purpose its good and we can continue to the bridge. Should look similar to this:
+![](./images/keptnbridgeafterinstall.png)
 
 ### Step 2 - Install my PAC SLI Provider
 
@@ -113,7 +117,7 @@ I've uploaded the shipyard file to this GitHub repo. In order to use it we simpl
 
 ```console
 $ wget https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/keptnproject/shipyard.yaml
-$ keptn create project pac-project -s=shipyard.yaml
+$ keptn create project pacproject -s=shipyard.yaml
 WARNING: Creating a project without Git upstream repository is not recommended.
 You can configure a Git upstream repository using:
 
@@ -121,23 +125,39 @@ keptn update project PROJECTNAME --git-user=GIT_USER --git-token=GIT_TOKEN --git
 
 Starting to create project
 ID of Keptn context: 681eb93a-c6ec-48b8-8761-792a3ddce477
-Project pac-project created
+Project pacproject created
 Stage qualitygate created
 Project successfully created
 ```
 
 As you can see from the output. It is recommend to also set an upstream git as Keptn internally keeps all files in a git repository managed by Keptn's configuration service. In our example I skip this step as its not necessary. If you still want to set an upstream git to e.g: point to a GitHub repo you can do this via the *keptn update project* command shown in the console output.
 
+**Validate status in Keptn's Bridge**
+If you refresh your browser you will also see the new project being created!
+![](.images/keptnbridgenewproject.png)
+
 ### Step 4 - Configure PAC Provider for our Project
 
 As of Keptn 0.7.x each Keptn project can have one SLI Provider that should be used when pulling in SLI data for quality gate evaluation. This will change in the future though to support multiple SLI providers.
-In order to tell Keptn which SLI provider we have to create a ConfigMap that links our pac-sliprovider to the pac-project. In the future this should be covered through a Keptn CLI command as explained in [Issue 2483](https://github.com/keptn/keptn/issues/2483)
+In order to tell Keptn which SLI provider we have to create a ConfigMap that links our pac-sliprovider to the pacproject. In the future this should be covered through a Keptn CLI command as explained in [Issue 2483](https://github.com/keptn/keptn/issues/2483)
 
-I've prepared a configMap for our pac-project which we can apply using kubectl
+I've prepared a configMap for our pacproject which we can apply using kubectl:
 
+Here is the configmap:
+```yaml
+apiVersion: v1
+data:
+  sli-provider: pac-sliprovider
+kind: ConfigMap
+metadata:
+  name: lighthouse-config-pacproject
+  namespace: keptn
+``` 
+
+And here now the command to apply it
 ```console
 $ k3s kubectl -n keptn apply -f https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/keptnproject/lighthouse-configmap.yaml
-configmap/lighthouse-config-pac-project created
+configmap/lighthouse-config-pacproject created
 ```
 
 ### Step 5 - Create a service
@@ -145,11 +165,15 @@ configmap/lighthouse-config-pac-project created
 A Keptn project not only has a defined set of stages. A Keptn project also has services which typically refer to your micro-services or applications you want keptn to provide testing, quality gate, delivery or remediation services for. In our case we simply create a service called *pacservice* that we will use to trigger our quality gates
 
 ```console
-$ keptn create service pacservice -p=pac-project
+$ keptn create service pacservice -p=pacproject
 Starting to create service
 ID of Keptn context: 3ef375d5-2c48-4514-ada8-0ef58f9673f4
 Creating new Keptn service pacservice in stage qualitygate
 ```
+
+**Validate in Keptns Bridge**
+In the bridge we can click on the project and validate that the pacservice was successfully created!
+![](./images/keptnbridgenewservice.png)
 
 ### Step 6 - Uploading SLO.yaml
 
@@ -158,8 +182,34 @@ For this we first download two files from this repo to your local machine and th
 
 ```console
 $ wget https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/keptnproject/slo.yaml
-$ wget 
+$ wget https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/keptnproject/pac-sliprovider/sli.yaml
 ```
+
+Now we upload the slo.yaml for that project, service and stage. The SLO.yaml goes into the root directory and has to have the name slo.yaml:
+```console
+$ keptn add-resource --project=pacproject --service=pacservice --stage=qualitygate --resource=slo.yaml
+Adding resource slo.yaml to service pacservice in stage qualitygate in project pacproject
+Resource has been uploaded.
+```
+
+The SLI.yaml is specific to the provider and per convention needs to be stored in a subdirectory called like the Keptn Service - in our case thats the *pac-sliprovider*. To specify that correct upload Uri we use the --resourceUri parameter where we specify foldername/filename:
+```console
+$ keptn add-resource --project=pacproject --service=pacservice --stage=qualitygate --resource=sli.yaml --resourceUri=pac-sliprovider/sli.yaml
+Adding resource sli.yaml to service pacservice in stage qualitygate in project pacproject
+Resource has been uploaded.
+```
+
+### Step 7 - Executing Quality Gates
+
+Now we are all set and can send Keptn some quality gate evaluation requests. The easiest is to do this via the Keptn CLI:
+
+```console
+$ keptn send event start-evaluation --project=pacproject --service=pacservice --stage=qualitygate labels=pacId=FirstPAC 
+Starting to send a start-evaluation event to evaluate the service pacservice in project pacproject
+ID of Keptn context: f80a65a3-f3c7-4b28-ac84-1da0dfd915a9
+```
+
+Best way to look at Quality Gate results is through the Keptns Bridge.
 
 
 The *pac-sliprovider* can be installed as a part of [Keptn's uniform](https://keptn.sh).

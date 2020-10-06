@@ -3,5 +3,5 @@ data:
   sli-provider: pac-sliprovider
 kind: ConfigMap
 metadata:
-  name: lighthouse-config-pac-project
+  name: lighthouse-config-pacproject
   namespace: keptn
