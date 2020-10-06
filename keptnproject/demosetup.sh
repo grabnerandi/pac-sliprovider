@@ -10,8 +10,18 @@ if [[ -z "${KEPTNSTAGE}" ]]; then
   KEPTNSTAGE=qualitygate
 fi
 if [[ -z "${K3SKUBECTL}" ]]; then
-  K3SKUBECTL="k3s kubectl"
+  K3SKUBECTL=("k3s" "kubectl")
 fi
+
+function apply_manifest {
+  if [[ ! -z $1 ]]; then
+    "${K3SKUBECTL[@]}" apply -f "${1}"
+    if [[ $? != 0 ]]; then
+      echo "Error applying manifest $1"
+      exit 1
+    fi
+  fi
+}
 
 echo "Assumes Keptn CLI is configured and points to a Keptn Installation"
 echo "Running with kubectl=${K3SKUBECTL}"
@@ -20,7 +30,7 @@ read -rsp $'Press ctrl-c to abort. Press any key to continue...\n' -n1 key
 
 echo "-----------------------------------------------"
 echo "Step 2 - Install PAC SLI Provider"
-"${K3SKUBECTL}" -n keptn apply -f https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/deploy/service.yaml
+apply_manifest "https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/deploy/service.yaml"
 
 echo "-----------------------------------------------"
 echo "Step 3 - Create a Keptn Project for PAC"
@@ -30,7 +40,15 @@ keptn create project "${KEPTNPROJECT}" -s=shipyard.yaml
 
 echo "-----------------------------------------------"
 echo "Step 4 - Configure PAC Provider for our Project"
-"${K3SKUBECTL}" -n keptn apply -f https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/keptnproject/lighthouse-configmap.yaml
+  cat << EOF | apply_manifest -
+apiVersion: v1
+data:
+  sli-provider: pac-sliprovider
+kind: ConfigMap
+metadata:
+  name: lighthouse-config-$KEPTNPROJECT
+  namespace: keptn
+EOF
 
 echo "-----------------------------------------------"
 echo "Step 5 - Create a service"
