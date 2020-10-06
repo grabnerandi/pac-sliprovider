@@ -134,7 +134,7 @@ As you can see from the output. It is recommend to also set an upstream git as K
 
 **Validate status in Keptn's Bridge**
 If you refresh your browser you will also see the new project being created!
-![](.images/keptnbridgenewproject.png)
+![](./images/keptnbridgenewproject.png)
 
 ### Step 4 - Configure PAC Provider for our Project
 
@@ -204,12 +204,27 @@ Resource has been uploaded.
 Now we are all set and can send Keptn some quality gate evaluation requests. The easiest is to do this via the Keptn CLI:
 
 ```console
-$ keptn send event start-evaluation --project=pacproject --service=pacservice --stage=qualitygate --labels=pacId=FirstPAC 
+$ keptn send event start-evaluation --project=pacproject --service=pacservice --stage=qualitygate --labels=pacId=FirstPAC,buildId=1
 Starting to send a start-evaluation event to evaluate the service pacservice in project pacproject
 ID of Keptn context: f80a65a3-f3c7-4b28-ac84-1da0dfd915a9
 ```
 
-Best way to look at Quality Gate results is through the Keptns Bridge.
+Best way to look at Quality Gate results is through the Keptns Bridge where we now see the first evaluation result. The results not only include the values for the two SLIs (number of speakers and average rating), it also includes a link back to the data source as well as to the PAC Website:
+![](./images/keptnbridgefirstevaluation.png)
+
+Now lets execute a couple of additional evaluations. The PAC SLI Provider allows us to query data from the results.json based on the pac id. Here some additional commands we can try out:
+```console
+$ keptn send event start-evaluation --project=pacproject --service=pacservice --stage=qualitygate --labels=pacId=MountainPAC,buildId=2
+```
+
+```console
+$ keptn send event start-evaluation --project=pacproject --service=pacservice --stage=qualitygate --labels=pacId=FuturePAC,buildId=3
+```
+
+```console
+$ keptn send event start-evaluation --project=pacproject --service=pacservice --stage=qualitygate --labels=pacId=JurrasicPAC,buildId=4
+```
+
 
 
 The *pac-sliprovider* can be installed as a part of [Keptn's uniform](https://keptn.sh).
