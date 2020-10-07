@@ -2,7 +2,7 @@
 
 This is a Keptn SLI Provider built for my talk at Neotys (Jurassic) PAC 2020: https://www.neotys.com/performance-advisory-council/andreas-grabner
 
-It was built using the [keptn-service-template-go](https://github.com/keptn-sandbox/keptn-service-template-go/generate) repository instructions which made it really simple.
+It was built using the [keptn-service-template-go](https://github.com/keptn-sandbox/keptn-service-template-go/) repository instructions which made it really simple.
 
 ## What does the PAC SLI Provider do?
 
@@ -17,7 +17,7 @@ If you want to
 
 ## Compatibility Matrix
 
-| Keptn Version    | [pac-sliprovider Docker Image](https://hub.docker.com/r/grabnerandi/pac-sliprovider/tags) |
+| Keptn Version    |  |
 |:----------------:|:----------------------------------------:|
 |       0.7.x      | grabnerandi/pac-sliprovider:0.1.0 |
 
