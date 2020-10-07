@@ -82,6 +82,12 @@ And - you should also open a browser and access the Keptn's Bridge with the cred
 If you dont want to run the following steps yourself you can also execute the script demosetup.sh which you find in this repo.
 Simply download it on your machine and execute it. It defaults to k3s kubectl for executing kubectl commands, pacproject, pacservice and qualitygate. If you want to change those simply export the environment variables first and then run demosetup.sh
 
+```console
+wget https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/keptnproject/demosetup.sh
+chmod +x demosetup.sh
+./demosetup.sh
+```
+
 ## Step 2 - Install my PAC SLI Provider
 
 Keptn is an event-driven control plane which means it issues events to trigger different activities, e.g: deploy, test, get sli data, validate, ...

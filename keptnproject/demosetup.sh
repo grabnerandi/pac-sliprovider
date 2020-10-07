@@ -31,6 +31,8 @@ read -rsp $'Press ctrl-c to abort. Press any key to continue...\n' -n1 key
 echo "-----------------------------------------------"
 echo "Step 2 - Install PAC SLI Provider"
 apply_manifest "https://raw.githubusercontent.com/grabnerandi/pac-sliprovider/master/deploy/service.yaml"
+echo "Wait until PAC SLI pod is ready"
+"${K3SKUBECTL[@]}" wait --namespace=keptn --for=condition=Ready pods --timeout=30s -l run=pac-sli-provider
 
 echo "-----------------------------------------------"
 echo "Step 3 - Create a Keptn Project for PAC"
