@@ -2,21 +2,18 @@
 
 This is a Keptn SLI Provider built for my talk at Neotys (Jurassic) PAC 2020: https://www.neotys.com/performance-advisory-council/andreas-grabner
 
-It was built using the [keptn-service-template-go](https://github.com/keptn-sandbox/keptn-service-template-go/generate) repository instructions which I kept here for reference!
+It was built using the [keptn-service-template-go](https://github.com/keptn-sandbox/keptn-service-template-go/generate) repository instructions which made it really simple.
+
+## What does the PAC SLI Provider do?
 
 Here is a high-level overview of what this Keptn SLI (Service Level Indicator) Provider does. It can read data from a results.json file and return data points that match the passed "pacId". This sample shows that Keptn SLI Providers can be used to query any type of data source. It also shows how contextual data can be passed to Keptn to query a specific set of data and how that data is then used by Keptn to be evaluated against your SLOs (Service Level Objectives).
 
 ![](./images/pacprovideroverview.png)
 
-If you want to learn more I encourage you to register for PAC and either watch me live or watch the recording!
-If you want to replicate what I have done in the demo feel free to follow along with this readme where I walk you through the full installation instructions!
-
-
-# pac-sliprovider
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/keptn-sandbox/pac-sliprovider)
-[![Go Report Card](https://goreportcard.com/badge/github.com/keptn-sandbox/pac-sliprovider)](https://goreportcard.com/report/github.com/keptn-sandbox/pac-sliprovider)
-
-This implements a pac-sliprovider for Keptn. If you want to learn more about Keptn visit us on [keptn.sh](https://keptn.sh)
+If you want to 
+* learn more I encourage you to register for PAC and either watch me live or watch the recording!
+* replicate what I have done in the demo feel free to follow along with this readme where I walk you through the full installation instructions!
+* follow up with me find me on the [Keptn Slack](https://slack.keptn.sh)
 
 ## Compatibility Matrix
 
@@ -36,7 +33,8 @@ In my talk I took a t2.medium Amazon Linux 2 EC2 machine where I
 * Uploading SLIs & SLOs
 * Executed a couple of Keptn Quality Gates
 
-Now - lets go into the details of each step so you can replicate this!
+**Option 1:** Walk through all my Steps to replicate this yourself!
+**Option 2:** Follow Step 1 and automate all other steps using my demosetup.sh
 
 ## Step 1 - Install Keptn
 
@@ -79,7 +77,7 @@ Now we are ready to use Keptn through the CLI.
 And - you should also open a browser and access the Keptn's Bridge with the credentials in the output. Your browser will most likely tell you that its unsecure to access that site. Thats because by default Keptn on k3s installs a self-signed certificate. If you want to run keptn with a proper certificate check out the documentation. For our purpose its good and we can continue to the bridge. Should look similar to this:
 ![](./images/keptnbridgeafterinstall.png)
 
-## Step 2 until 7
+## Step 2 until 7: Automate it through demosetup.sh
 
 If you dont want to run the following steps yourself you can also execute the script demosetup.sh which you find in this repo.
 Simply download it on your machine and execute it. It defaults to k3s kubectl for executing kubectl commands, pacproject, pacservice and qualitygate. If you want to change those simply export the environment variables first and then run demosetup.sh
